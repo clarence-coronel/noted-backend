@@ -16,8 +16,4 @@ Features
    <li>
     User Authentication: Securely authenticate users to access their personalized todo lists.
   </li>
-
-   <li>
-    Project Management: Organize your tasks into projects for better categorization and clarity.
-  </li>
 </ul>
