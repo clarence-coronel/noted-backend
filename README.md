@@ -1,6 +1,6 @@
 <h1>Noted</h1>
 <p>
-  Noted is a feature-rich todo list application designed to help you stay organized and productive. With Noted, you can manage multiple projects, each containing tasks, collaborate with team members, and streamline your workflow. The application also includes user authentication to ensure your data is secure.
+  Noted is a feature-rich todo list application designed to help you stay organized and productive. With Noted, you can manage multiple projects, each containing tasks. The application also includes user authentication to ensure your data is secure.
 </p>
 
 Features
