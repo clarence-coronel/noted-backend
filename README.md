@@ -3,7 +3,7 @@
   Noted is a feature-rich todo list application designed to help you stay organized and productive. With Noted, you can manage multiple projects, each containing tasks. The application also includes user authentication to ensure your data is secure.
 </p>
 
-Features
+<h3>Features</h3>
 <ul>
   <li>
     Project Management: Organize your tasks into projects for better categorization and clarity.
