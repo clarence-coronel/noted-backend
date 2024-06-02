@@ -13,6 +13,7 @@ import {
 import "./../strategies/local-strategy.mjs";
 import { hashPassword } from "../utils/helpers.mjs";
 import passport from "passport";
+import { validateSession } from "../utils/middlewares.mjs";
 
 const router = Router();
 
@@ -33,11 +34,8 @@ router.post(
   }
 );
 
-router.get("/api/user/auth/status", (request, response) => {
-  console.log(`Inside /auth/status endpoint`);
-  console.log(request.user);
-  console.log(request.session);
-  return request.user ? response.send(request.user) : response.sendStatus(401);
+router.get("/api/user/auth/status", validateSession, (request, response) => {
+  return response.status(200).send(request.user);
 });
 
 router.post(
@@ -64,9 +62,7 @@ router.post(
   }
 );
 
-router.post("/api/user/auth/logout", (request, response) => {
-  if (!request.user) return response.sendStatus(401);
-
+router.post("/api/user/auth/logout", validateSession, (request, response) => {
   request.logout((err) => {
     if (err) return response.sendStatus(400);
 
