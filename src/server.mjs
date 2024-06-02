@@ -21,10 +21,10 @@ mongoose
 
 app.use(express.json());
 // ADD PROPER SECRET
-app.use(cookieParser("helloworld"));
+// app.use(cookieParser("helloworld"));
 app.use(
   session({
-    secret: "clarence the dev",
+    secret: "@SeCR3T",
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -35,6 +35,9 @@ app.use(
     }),
   })
 );
+
+// app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(Routes);
 
