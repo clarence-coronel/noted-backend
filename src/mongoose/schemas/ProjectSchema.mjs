@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const ProjectSchema = new mongoose.Schema({
   name: {
@@ -12,6 +12,11 @@ const ProjectSchema = new mongoose.Schema({
   listType: {
     type: String,
     enum: ["UL", "OL"],
+    required: true,
+  },
+  ownedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });

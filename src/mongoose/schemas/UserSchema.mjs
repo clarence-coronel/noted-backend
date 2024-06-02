@@ -12,12 +12,6 @@ const UserSchema = new mongoose.Schema({
   },
   displayName: mongoose.Schema.Types.String,
   password: { type: mongoose.Schema.Types.String, required: true },
-  projectIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
-    },
-  ],
 });
 
 export const User = mongoose.model("User", UserSchema);
