@@ -1,3 +1,6 @@
+// TO DO
+// Add data validation
+
 import { Router } from "express";
 import {
   query,
@@ -16,6 +19,11 @@ import passport from "passport";
 import { validateSession } from "../utils/middlewares.mjs";
 
 const router = Router();
+
+// Check Status
+router.get("/api/user/auth/status", validateSession, (request, response) => {
+  return response.status(200).send(request.user);
+});
 
 // Login User
 router.post(
@@ -38,11 +46,6 @@ router.post(
     return response.sendStatus(200);
   }
 );
-
-// Check Status
-router.get("/api/user/auth/status", validateSession, (request, response) => {
-  return response.status(200).send(request.user);
-});
 
 // Register User
 router.post(
@@ -76,6 +79,30 @@ router.post("/api/user/auth/logout", validateSession, (request, response) => {
 
     return response.sendStatus(200);
   });
+});
+
+// Update User
+router.put("/api/user/:id", validateSession, async (request, response) => {
+  const {
+    params: { id },
+  } = request;
+
+  try {
+    const user = await User.findById(id);
+
+    user.displayName = request.body.displayName || user.displayName;
+    user.password = request.body.password
+      ? hashPassword(request.body.password)
+      : user.password;
+
+    const savedUser = await user.save();
+
+    return response.status(200).send(savedUser);
+  } catch (error) {
+    return response.sendStatus(404);
+  }
+
+  return response.sendStatus(200);
 });
 
 export default router;
