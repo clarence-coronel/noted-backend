@@ -1,4 +1,4 @@
-import { Router, response } from "express";
+import { Router } from "express";
 import {
   query,
   validationResult,
@@ -17,6 +17,7 @@ import { validateSession } from "../utils/middlewares.mjs";
 
 const router = Router();
 
+// Login User
 router.post(
   "/api/user/auth",
   checkSchema(loginUserValidationSchema),
@@ -26,6 +27,10 @@ router.post(
     if (!result.isEmpty())
       return response.status(400).send({ errors: result.array() });
 
+    const data = matchedData(request);
+
+    request.body = data;
+
     next();
   },
   passport.authenticate("local"),
@@ -34,10 +39,12 @@ router.post(
   }
 );
 
+// Check Status
 router.get("/api/user/auth/status", validateSession, (request, response) => {
   return response.status(200).send(request.user);
 });
 
+// Register User
 router.post(
   "/api/user/register",
   checkSchema(createUserValidationSchema),
@@ -62,6 +69,7 @@ router.post(
   }
 );
 
+// End User Session
 router.post("/api/user/auth/logout", validateSession, (request, response) => {
   request.logout((err) => {
     if (err) return response.sendStatus(400);
