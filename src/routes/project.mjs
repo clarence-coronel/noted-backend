@@ -4,43 +4,75 @@
 import { Router, response } from "express";
 import { validateSession } from "../utils/middlewares.mjs";
 import { Project } from "./../mongoose/schemas/ProjectSchema.mjs";
+import {
+  query,
+  validationResult,
+  checkSchema,
+  matchedData,
+} from "express-validator";
+import { createProjectValidationSchema } from "../utils/validationSchema.mjs";
+import { updateProjectValidatitonSchema } from "../utils/validationSchema.mjs";
 
 const router = Router();
 
 // Create new project
-router.post("/api/project", validateSession, async (request, response) => {
-  const newProject = new Project(request.body);
+router.post(
+  "/api/project",
+  validateSession,
+  checkSchema(createProjectValidationSchema),
+  async (request, response) => {
+    const result = validationResult(request);
 
-  newProject.ownedBy = request.user._id;
+    if (!result.isEmpty())
+      return response.status(400).send({ errors: result.array() });
 
-  try {
-    const savedProject = await newProject.save();
-    return response.status(201).send(savedProject);
-  } catch (error) {
-    return response.status(401).send({ msg: error });
+    const data = matchedData(request);
+
+    const newProject = new Project(data);
+
+    newProject.ownedBy = request.user._id;
+
+    try {
+      const savedProject = await newProject.save();
+      return response.status(201).send(savedProject);
+    } catch (error) {
+      return response.status(401).send({ msg: error });
+    }
   }
-});
+);
 
 // Update Project
-router.put("/api/project/:id", validateSession, async (request, response) => {
-  const {
-    params: { id },
-  } = request;
+router.put(
+  "/api/project/:id",
+  validateSession,
+  checkSchema(updateProjectValidatitonSchema),
+  async (request, response) => {
+    const {
+      params: { id },
+    } = request;
 
-  try {
-    const project = await Project.findById(id);
+    const result = validationResult(request);
 
-    project.name = request.body.name || project.name;
-    project.listType = request.body.listType || project.listType;
+    if (!result.isEmpty())
+      return response.status(400).send({ errors: result.array() });
 
-    const savedProject = await project.save();
+    const data = matchedData(request);
 
-    return response.status(200).send(savedProject);
-  } catch (error) {
-    return response.sendStatus(404);
+    try {
+      const project = await Project.findById(id);
+
+      project.name = data.name || project.name;
+      project.listType = data.listType || project.listType;
+
+      const savedProject = await project.save();
+
+      return response.status(200).send(savedProject);
+    } catch (error) {
+      return response.sendStatus(404);
+    }
+
+    return response.sendStatus(200);
   }
-
-  return response.sendStatus(200);
-});
+);
 
 export default router;

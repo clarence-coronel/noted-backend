@@ -76,3 +76,42 @@ export const loginUserValidationSchema = {
     },
   },
 };
+
+export const createProjectValidationSchema = {
+  name: {
+    notEmpty: {
+      errorMessage: "Name should not be empty",
+    },
+    isString: {
+      errorMessage: "Name should be a string",
+    },
+  },
+  listType: {
+    notEmpty: {
+      errorMessage: "List type should not be empty",
+    },
+    isString: {
+      errorMessage: "List type should be a string",
+    },
+    isIn: {
+      options: [["UL", "OL"]],
+      errorMessage: "List type must be either UL or OL",
+    },
+  },
+};
+
+export const updateProjectValidatitonSchema = {
+  name: {
+    optional: true,
+    isString: {
+      errorMessage: "Name should be a string",
+    },
+  },
+  listType: {
+    optional: true,
+    isIn: {
+      options: [["UL", "OL"]],
+      errorMessage: "List type must be either UL or OL if provided",
+    },
+  },
+};
