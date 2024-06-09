@@ -63,6 +63,11 @@ router.put(
     try {
       const project = await Project.findById(id);
 
+      if (!project.ownedBy.equals(request.user._id))
+        return response
+          .status(403)
+          .send({ msg: "User does not own the project" });
+
       project.name = data.name || project.name;
       project.listType = data.listType || project.listType;
 
