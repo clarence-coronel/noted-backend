@@ -19,6 +19,10 @@ const ProjectSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export const Project = mongoose.model("Project", ProjectSchema);

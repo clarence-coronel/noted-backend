@@ -1,6 +1,3 @@
-// TO DO
-// Add data validation
-
 import { Router } from "express";
 import {
   query,
@@ -34,11 +31,9 @@ router.post(
     const result = validationResult(request);
 
     if (request.user)
-      return response
-        .status(409)
-        .send({
-          msg: "Attempt to log in with a different account while already logged in with another account",
-        });
+      return response.status(409).send({
+        msg: "Attempt to log in with a different account while already logged in with another account",
+      });
 
     if (!result.isEmpty())
       return response.status(400).send({ errors: result.array() });

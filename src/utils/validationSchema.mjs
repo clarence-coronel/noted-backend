@@ -15,7 +15,7 @@ export const createUserValidationSchema = {
     },
   },
   displayName: {
-    optional: { options: { checkFalsy: true } }, // Allows empty values
+    optional: true,
     isLength: {
       options: {
         min: 5,
@@ -135,6 +135,7 @@ export const createProjectValidationSchema = {
       errorMessage: "List type must be either UL or OL",
     },
   },
+  isActive: {},
 };
 
 export const updateProjectValidatitonSchema = {

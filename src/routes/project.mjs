@@ -1,15 +1,7 @@
-// TO DO
-// Add data validation
-
 import { Router, response } from "express";
 import { validateSession } from "../utils/middlewares.mjs";
 import { Project } from "./../mongoose/schemas/ProjectSchema.mjs";
-import {
-  query,
-  validationResult,
-  checkSchema,
-  matchedData,
-} from "express-validator";
+import { validationResult, checkSchema, matchedData } from "express-validator";
 import {
   createProjectValidationSchema,
   updateProjectValidatitonSchema,
@@ -43,7 +35,7 @@ router.post(
   }
 );
 
-// Update Project
+// Update project
 router.put(
   "/api/project/:id",
   validateSession,
@@ -82,4 +74,22 @@ router.put(
   }
 );
 
+// Delete project / Toggle active status to false
+router.patch("/api/project/:id", validateSession, async (request, response) => {
+  const {
+    params: { id },
+  } = request;
+
+  try {
+    const selectedProject = await Project.findById(id);
+
+    selectedProject.isActive = false;
+
+    selectedProject.save();
+
+    return response.status(200).send({ msg: "Project disabled" });
+  } catch (error) {
+    return response.status(400).send({ error: error });
+  }
+});
 export default router;
