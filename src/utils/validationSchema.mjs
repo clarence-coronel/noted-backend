@@ -77,21 +77,58 @@ export const loginUserValidationSchema = {
   },
 };
 
+export const updateUserValidationSchema = {
+  displayName: {
+    optional: true,
+    isLength: {
+      options: {
+        min: 5,
+        max: 32,
+      },
+      errorMessage: "Display name must be at least 5-32 characters",
+    },
+    isString: {
+      errorMessage: "Display name must be a string",
+    },
+  },
+  password: {
+    optional: true,
+    isLength: {
+      options: {
+        min: 5,
+        max: 32,
+      },
+      errorMessage: "Password must be at least 5-32 characters",
+    },
+    isString: {
+      errorMessage: "Password must be a string",
+    },
+  },
+  currentPassword: {
+    notEmpty: {
+      errorMessage: "Current password cannot be empty",
+    },
+    isString: {
+      errorMessage: "Current password must be a string",
+    },
+  },
+};
+
 export const createProjectValidationSchema = {
   name: {
     notEmpty: {
-      errorMessage: "Name should not be empty",
+      errorMessage: "Name must not be empty",
     },
     isString: {
-      errorMessage: "Name should be a string",
+      errorMessage: "Name must be a string",
     },
   },
   listType: {
     notEmpty: {
-      errorMessage: "List type should not be empty",
+      errorMessage: "List type must not be empty",
     },
     isString: {
-      errorMessage: "List type should be a string",
+      errorMessage: "List type must be a string",
     },
     isIn: {
       options: [["UL", "OL"]],
@@ -104,7 +141,7 @@ export const updateProjectValidatitonSchema = {
   name: {
     optional: true,
     isString: {
-      errorMessage: "Name should be a string",
+      errorMessage: "Name must be a string",
     },
   },
   listType: {

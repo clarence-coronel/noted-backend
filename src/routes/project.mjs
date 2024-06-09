@@ -10,8 +10,10 @@ import {
   checkSchema,
   matchedData,
 } from "express-validator";
-import { createProjectValidationSchema } from "../utils/validationSchema.mjs";
-import { updateProjectValidatitonSchema } from "../utils/validationSchema.mjs";
+import {
+  createProjectValidationSchema,
+  updateProjectValidatitonSchema,
+} from "../utils/validationSchema.mjs";
 
 const router = Router();
 

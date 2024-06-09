@@ -12,9 +12,10 @@ import { User } from "../mongoose/schemas/UserSchema.mjs";
 import {
   createUserValidationSchema,
   loginUserValidationSchema,
+  updateUserValidationSchema,
 } from "../utils/validationSchema.mjs";
 import "./../strategies/local-strategy.mjs";
-import { hashPassword } from "../utils/helpers.mjs";
+import { hashPassword, isPasswordValid } from "../utils/helpers.mjs";
 import passport from "passport";
 import { validateSession } from "../utils/middlewares.mjs";
 
@@ -82,27 +83,44 @@ router.post("/api/user/auth/logout", validateSession, (request, response) => {
 });
 
 // Update User
-router.put("/api/user/:id", validateSession, async (request, response) => {
-  const {
-    params: { id },
-  } = request;
+router.put(
+  "/api/user/:id",
+  validateSession,
+  checkSchema(updateUserValidationSchema),
+  async (request, response) => {
+    const result = validationResult(request);
 
-  try {
-    const user = await User.findById(id);
+    if (!result.isEmpty())
+      return response.status(400).send({ errors: result.array() });
 
-    user.displayName = request.body.displayName || user.displayName;
-    user.password = request.body.password
-      ? hashPassword(request.body.password)
-      : user.password;
+    const data = matchedData(request);
 
-    const savedUser = await user.save();
+    const {
+      params: { id },
+    } = request;
 
-    return response.status(200).send(savedUser);
-  } catch (error) {
-    return response.sendStatus(404);
+    try {
+      const user = await User.findById(id);
+
+      if (!isPasswordValid(data.currentPassword, user.password))
+        return response.status(400).send({ msg: "Incorrect password" });
+      // If request has no displayName use existing
+      user.displayName = data.displayName || user.displayName;
+
+      // If request has no password use existing otherwise hash new password
+      user.password = data.password
+        ? hashPassword(data.password)
+        : user.password;
+
+      const savedUser = await user.save();
+
+      return response.status(200).send(savedUser);
+    } catch (error) {
+      return response.sendStatus(404);
+    }
+
+    return response.sendStatus(200);
   }
-
-  return response.sendStatus(200);
-});
+);
 
 export default router;
