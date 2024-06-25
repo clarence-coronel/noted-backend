@@ -9,6 +9,13 @@ import {
 
 const router = Router();
 
+// Retrieve all projects owned by the current logged in user
+router.get("/api/project", validateSession, async (request, response) => {
+  const projects = await Project.find({ ownedBy: request.user });
+
+  return response.status(200).send({ projects });
+});
+
 // Create new project
 router.post(
   "/api/project",
@@ -92,4 +99,5 @@ router.patch("/api/project/:id", validateSession, async (request, response) => {
     return response.status(400).send({ error: error });
   }
 });
+
 export default router;

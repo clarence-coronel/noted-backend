@@ -12,7 +12,8 @@ const TaskSchema = new mongoose.Schema({
   status: {
     type: mongoose.Schema.Types.String,
     enum: ["PENDING", "COMPLETED"],
-    required: true,
+    default: "PENDING",
+    // required: true,
   },
   dateCreated: {
     type: mongoose.Schema.Types.Date,
