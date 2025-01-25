@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
 import MongoStore from "connect-mongo";
+import cors from "cors"; // Importing the cors package
 
 dotenv.config();
 
@@ -20,8 +21,16 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.json());
-// ADD PROPER SECRET
-// app.use(cookieParser("helloworld"));
+
+// Enable CORS for all origins
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+
 app.use(
   session({
     secret: "@SeCR3T",
@@ -36,9 +45,7 @@ app.use(
   })
 );
 
-// app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(Routes);
 
 app.listen(PORT, () => {
